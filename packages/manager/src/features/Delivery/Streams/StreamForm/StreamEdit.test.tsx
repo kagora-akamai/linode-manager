@@ -86,7 +86,7 @@ describe('StreamEdit', () => {
   });
 
   describe(
-    'given Test Connection and Edit Stream buttons',
+    'given Test Connection and Save Changes buttons',
     { timeout: 10000 },
     () => {
       const testConnectionButtonText = 'Test Connection';
@@ -128,7 +128,7 @@ describe('StreamEdit', () => {
           const createDestinationSpy = vi.fn();
           const verifyDestinationSpy = vi.fn();
 
-          it("should enable Edit Stream button and perform proper calls when it's clicked", async () => {
+          it("should enable Save Changes button and perform proper calls when it's clicked", async () => {
             server.use(
               http.get('*/monitor/streams/destinations', () => {
                 return HttpResponse.json(makeResourcePage(mockDestinations));
@@ -188,7 +188,7 @@ describe('StreamEdit', () => {
           const editStreamSpy = vi.fn();
           const createDestinationSpy = vi.fn();
 
-          it("should enable Edit Stream button and perform proper calls when it's clicked", async () => {
+          it("should enable Save Changes button and perform proper calls when it's clicked", async () => {
             server.use(
               http.get('*/monitor/streams/destinations', () => {
                 return HttpResponse.json(makeResourcePage(mockDestinations));
@@ -223,7 +223,7 @@ describe('StreamEdit', () => {
               name: saveStreamButtonText,
             });
 
-            // Edit stream button should not be disabled with existing destination selected
+            // Save Changes button should not be disabled with existing destination selected
             expect(editStreamButton).toBeEnabled();
 
             // Test connection should be disabled when using existing destination
@@ -240,7 +240,7 @@ describe('StreamEdit', () => {
           });
 
           describe('and stream has status: provisioning', () => {
-            it('should have disabled Edit Stream button and show info tooltip', async () => {
+            it('should have disabled Save Changes button and show info tooltip', async () => {
               server.use(
                 http.get('*/monitor/streams/destinations', () => {
                   return HttpResponse.json(makeResourcePage(mockDestinations));
@@ -263,7 +263,7 @@ describe('StreamEdit', () => {
                 name: saveStreamButtonText,
               });
 
-              // Edit stream button should be disabled
+              // Save Changes button should be disabled
               expect(editStreamButton).toBeDisabled();
 
               // Edit stream
@@ -286,7 +286,7 @@ describe('StreamEdit', () => {
       describe('when form properly filled out and Test Connection button clicked and connection verified negatively', () => {
         const verifyDestinationSpy = vi.fn();
 
-        it('should not enable Edit Stream button', async () => {
+        it('should not enable Save Changes button', async () => {
           server.use(
             http.get('*/monitor/streams/destinations', () => {
               return HttpResponse.json(makeResourcePage(mockDestinations));

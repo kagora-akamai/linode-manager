@@ -31,7 +31,9 @@ describe('Edit Destination', () => {
         bypassAccountCapabilities: true,
       },
     });
-    cy.visitWithLogin(`/logs/delivery/destinations/${mockDestination.id}/edit`);
+    cy.visitWithLogin(
+      `/logs/delivery/destinations/${mockDestination.id}/summary`
+    );
     mockGetDestination(mockDestination);
   });
 
