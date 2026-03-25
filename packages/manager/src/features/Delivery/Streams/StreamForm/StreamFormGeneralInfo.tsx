@@ -1,12 +1,5 @@
 import { streamType } from '@linode/api-v4';
-import {
-  Autocomplete,
-  Box,
-  Paper,
-  SelectedIcon,
-  TextField,
-  Typography,
-} from '@linode/ui';
+import { Autocomplete, Paper, TextField, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -15,12 +8,13 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import {
   getStreamTypeOption,
   isFormInEditMode,
+  mapAutocompleteOptionsWithPendo,
+  renderOptionsWithPendo,
   useIsLkeEAuditLogsTypeSelectionEnabled,
 } from 'src/features/Delivery/deliveryUtils';
 import { streamTypeOptions } from 'src/features/Delivery/Shared/types';
 
 import type { StreamAndDestinationFormType } from './types';
-import type { StreamType } from '@linode/api-v4';
 import type {
   AutocompleteOption,
   FormMode,
@@ -56,10 +50,7 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
     : streamTypeOptions;
 
   const streamTypeOptionsWithPendo: AutocompleteOption[] =
-    filteredStreamTypeOptions.map((option) => ({
-      ...option,
-      pendoId: pendoIds[option.value as StreamType],
-    }));
+    mapAutocompleteOptionsWithPendo(filteredStreamTypeOptions, pendoIds);
 
   const selectedStreamType = useWatch({
     control,
@@ -116,25 +107,7 @@ export const StreamFormGeneralInfo = (props: StreamFormGeneralInfoProps) => {
               updateStreamDetails(value);
             }}
             options={streamTypeOptionsWithPendo}
-            renderOption={(props, option, { selected }) => {
-              return (
-                <li
-                  {...props}
-                  data-pendo-id={option.pendoId}
-                  data-qa-option
-                  key={props.key}
-                >
-                  <Box
-                    sx={{
-                      flexGrow: 1,
-                    }}
-                  >
-                    {option.label}
-                  </Box>
-                  <SelectedIcon visible={selected} />
-                </li>
-              );
-            }}
+            renderOption={renderOptionsWithPendo}
             textFieldProps={{
               inputProps: {
                 'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Stream Type`,

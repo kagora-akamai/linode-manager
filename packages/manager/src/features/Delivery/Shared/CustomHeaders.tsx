@@ -7,6 +7,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -17,6 +18,8 @@ import {
   useFormContext,
   useWatch,
 } from 'react-hook-form';
+
+import type { FormMode, FormType } from 'src/features/Delivery/Shared/types';
 
 interface CustomHeaderTitleProps {
   control: Control;
@@ -60,10 +63,12 @@ const CustomHeaderTitle = (props: CustomHeaderTitleProps) => {
 
 interface CustomHeadersProps {
   controlPath: string;
+  entity: FormType;
+  mode: FormMode;
 }
 
 export const CustomHeaders = (props: CustomHeadersProps) => {
-  const { controlPath } = props;
+  const { controlPath, mode, entity } = props;
 
   const { control, unregister } = useFormContext();
 
@@ -71,6 +76,8 @@ export const CustomHeaders = (props: CustomHeadersProps) => {
     control,
     name: controlPath,
   });
+
+  const pendoPageId = `Logs Delivery ${capitalize(entity)}s ${capitalize(mode)}${entity === 'destination' ? '' : ' New Destination'}-`;
 
   useEffect(() => {
     if (fields.length === 0) {
@@ -113,7 +120,11 @@ export const CustomHeaders = (props: CustomHeadersProps) => {
                 index={index}
                 tooltipText="A custom HTTPS header to include in the delivery request."
               />
-              <IconButton onClick={() => removeField(index)} sx={{ p: 0 }}>
+              <IconButton
+                data-pendo-id={`${pendoPageId}Delete Custom Header`}
+                onClick={() => removeField(index)}
+                sx={{ p: 0 }}
+              >
                 <CloseIcon />
               </IconButton>
             </Grid>
@@ -125,6 +136,9 @@ export const CustomHeaders = (props: CustomHeadersProps) => {
                   <TextField
                     aria-required
                     errorText={fieldState.error?.message}
+                    inputProps={{
+                      'data-pendo-id': `${pendoPageId}Custom Header Name`,
+                    }}
                     label="Name"
                     labelTooltipText="The name of the custom header to include in the delivery request."
                     onBlur={controllerField.onBlur}
@@ -140,6 +154,9 @@ export const CustomHeaders = (props: CustomHeadersProps) => {
                   <TextField
                     aria-required
                     errorText={fieldState.error?.message}
+                    inputProps={{
+                      'data-pendo-id': `${pendoPageId}Custom Header Value`,
+                    }}
                     label="Value"
                     labelTooltipText="The value of the custom header to include in the delivery request."
                     multiline
@@ -154,6 +171,7 @@ export const CustomHeaders = (props: CustomHeadersProps) => {
         ))}
       </Stack>
       <LinkButton
+        data-pendo-id={`${pendoPageId}Add Custom Header`}
         onClick={addNewField}
         sx={(theme) => ({
           mt: theme.spacingFunction(16),

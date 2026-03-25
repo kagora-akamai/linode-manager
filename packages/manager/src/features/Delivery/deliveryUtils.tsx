@@ -9,8 +9,9 @@ import {
   streamType,
 } from '@linode/api-v4';
 import { useAccount } from '@linode/queries';
-import { omitProps } from '@linode/ui';
+import { Box, omitProps, SelectedIcon } from '@linode/ui';
 import { isFeatureEnabledV2 } from '@linode/utilities';
+import React from 'react';
 
 import {
   authenticationTypeOptions,
@@ -24,6 +25,7 @@ import type {
   CustomHTTPSDetailsExtended,
   DestinationType,
 } from '@linode/api-v4';
+import type { AutocompleteRenderOptionState } from '@mui/material';
 import type {
   AutocompleteOption,
   DestinationDetailsForm,
@@ -161,5 +163,41 @@ export const useIsLkeEAuditLogsTypeSelectionEnabled = (): boolean => {
   const { data: account } = useAccount();
   return !!account?.capabilities?.includes(
     'Akamai Cloud Pulse Logs LKE-E Audit'
+  );
+};
+
+export const mapAutocompleteOptionsWithPendo = (
+  options: AutocompleteOption[],
+  pendoIds: { [x: string]: any }
+) => {
+  return options.map((option) => ({
+    ...option,
+    pendoId: pendoIds[option.value],
+  }));
+};
+
+export const renderOptionsWithPendo = (
+  props: React.JSX.IntrinsicAttributes &
+    React.ClassAttributes<HTMLLIElement> &
+    React.LiHTMLAttributes<HTMLLIElement>,
+  option: AutocompleteOption,
+  { selected }: AutocompleteRenderOptionState
+): React.JSX.Element => {
+  return (
+    <li
+      {...props}
+      data-pendo-id={option.pendoId}
+      data-qa-option
+      key={props.key}
+    >
+      <Box
+        sx={{
+          flexGrow: 1,
+        }}
+      >
+        {option.label}
+      </Box>
+      <SelectedIcon visible={selected} />
+    </li>
   );
 };

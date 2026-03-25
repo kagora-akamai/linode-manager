@@ -10,12 +10,13 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useEffect } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
-import { useFormContext } from 'react-hook-form';
-import { Controller, useWatch } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
   getDestinationTypeOption,
   isFormInEditMode,
+  mapAutocompleteOptionsWithPendo,
+  renderOptionsWithPendo,
   useIsACLPLogsEnabled,
 } from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
@@ -25,6 +26,7 @@ import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
 import { useVerifyDestination } from 'src/features/Delivery/Shared/useVerifyDestination';
 
 import type {
+  AutocompleteOption,
   DestinationFormType,
   FormMode,
 } from 'src/features/Delivery/Shared/types';
@@ -71,6 +73,15 @@ export const DestinationForm = (props: DestinationFormProps) => {
     control,
   }) as DestinationFormType;
 
+  const pendoPageId = `Logs Delivery Destinations ${capitalize(mode)}-`;
+  const pendoIds = {
+    [destinationType.CustomHttps]: `${pendoPageId}Custom HTTPS`,
+    [destinationType.AkamaiObjectStorage]: `${pendoPageId}Akamai Object Storage`,
+  };
+
+  const destinationTypeOptionsWithPendo: AutocompleteOption[] =
+    mapAutocompleteOptionsWithPendo(destinationTypeOptions, pendoIds);
+
   useEffect(() => {
     setDestinationVerified(false);
   }, [destination, setDestinationVerified]);
@@ -116,10 +127,11 @@ export const DestinationForm = (props: DestinationFormProps) => {
                     resetForm(value as DestinationType);
                     field.onChange(value);
                   }}
-                  options={destinationTypeOptions}
+                  options={destinationTypeOptionsWithPendo}
+                  renderOption={renderOptionsWithPendo}
                   textFieldProps={{
                     inputProps: {
-                      'data-pendo-id': `Logs Delivery Destinations ${capitalize(mode)}-Destination Type`,
+                      'data-pendo-id': `${pendoPageId}Destination Type`,
                     },
                   }}
                   value={getDestinationTypeOption(field.value)}
@@ -134,7 +146,7 @@ export const DestinationForm = (props: DestinationFormProps) => {
                   aria-required
                   errorText={fieldState.error?.message}
                   inputProps={{
-                    'data-pendo-id': `Logs Delivery Destinations ${capitalize(mode)}-Destination Name`,
+                    'data-pendo-id': `${pendoPageId}Destination Name`,
                   }}
                   label="Destination Name"
                   onBlur={field.onBlur}

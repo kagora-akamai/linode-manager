@@ -110,11 +110,13 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
       >
         <FormControlLabel
           control={<Radio />}
+          data-pendo-id={`${pendoPageId}Select Bucket`}
           label="Select Bucket associated with the account"
           value="bucket_from_account"
         />
         <FormControlLabel
           control={<Radio />}
+          data-pendo-id={`${pendoPageId}Manual Bucket`}
           label="Enter Bucket manually"
           value="bucket_entered_manually"
         />
@@ -132,6 +134,9 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             regions={regions ?? []}
             textFieldProps={{
               optional: true,
+              inputProps: {
+                'data-pendo-id': `${pendoPageId}Region`,
+              },
             }}
             value={selectedRegion}
           />
@@ -176,7 +181,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
               aria-required
               errorText={fieldState.error?.message}
               inputProps={{
-                'data-pendo-id': `${pendoPageId}Bucket`,
+                'data-pendo-id': `${pendoPageId}Bucket Name`,
               }}
               label="Bucket"
               onBlur={field.onBlur}
@@ -197,7 +202,7 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
             disabled={selectedBucketConfiguration === 'bucket_from_account'}
             errorText={fieldState.error?.message}
             inputProps={{
-              'data-pendo-id': `${pendoPageId}Host`,
+              'data-pendo-id': `${pendoPageId}Endpoint`,
             }}
             label="Endpoint"
             onBlur={field.onBlur}
