@@ -109,14 +109,12 @@ export const DestinationAkamaiObjectStorageDetailsForm = ({
         value={selectedBucketConfiguration}
       >
         <FormControlLabel
-          control={<Radio />}
-          data-pendo-id={`${pendoPageId}Select Bucket`}
+          control={<Radio data-pendo-id={`${pendoPageId}Manual Bucket`} />}
           label="Select Bucket associated with the account"
           value="bucket_from_account"
         />
         <FormControlLabel
-          control={<Radio />}
-          data-pendo-id={`${pendoPageId}Manual Bucket`}
+          control={<Radio data-pendo-id={`${pendoPageId}Manual Bucket`} />}
           label="Enter Bucket manually"
           value="bucket_entered_manually"
         />

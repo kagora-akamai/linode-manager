@@ -21,11 +21,16 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
   getDestinationTypeOption,
+  mapAutocompleteOptionsWithPendo,
+  renderOptionsWithPendo,
   useIsACLPLogsEnabled,
 } from 'src/features/Delivery/deliveryUtils';
 import { DestinationAkamaiObjectStorageDetailsForm } from 'src/features/Delivery/Shared/DestinationAkamaiObjectStorageDetailsForm';
 import { DestinationCustomHttpsDetailsForm } from 'src/features/Delivery/Shared/DestinationCustomHttpsDetailsForm';
-import { destinationTypeOptions } from 'src/features/Delivery/Shared/types';
+import {
+  type AutocompleteOption,
+  destinationTypeOptions,
+} from 'src/features/Delivery/Shared/types';
 import { DestinationAkamaiObjectStorageDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationAkamaiObjectStorageDetailsSummary';
 import { DestinationCustomHTTPSDetailsSummary } from 'src/features/Delivery/Streams/StreamForm/Delivery/DestinationCustomHTTPSDetailsSummary';
 
@@ -117,6 +122,14 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
     name: 'stream.destinations',
   });
 
+  const pendoPageId = `Logs Delivery Streams ${capitalize(mode)}-`;
+  const pendoIds = {
+    [destinationType.CustomHttps]: `${pendoPageId}Custom HTTPS`,
+    [destinationType.AkamaiObjectStorage]: `${pendoPageId}Akamai Object Storage`,
+  };
+  const destinationTypeOptionsWithPendo: AutocompleteOption[] =
+    mapAutocompleteOptionsWithPendo(destinationTypeOptions, pendoIds);
+
   const destinationNameFilterOptions = createFilterOptions<DestinationName>({
     stringify: (destination) => destination.label,
   });
@@ -177,7 +190,8 @@ export const StreamFormDelivery = (props: StreamFormDeliveryProps) => {
               resetDestinationForm(value as DestinationType);
               setCreatingNewDestination(false);
             }}
-            options={destinationTypeOptions}
+            options={destinationTypeOptionsWithPendo}
+            renderOption={renderOptionsWithPendo}
             textFieldProps={{
               inputProps: {
                 'data-pendo-id': `Logs Delivery Streams ${capitalizedMode}-Destination Type`,
